@@ -2,9 +2,9 @@
  * @Author       : wyatt
  * @Date         : 2021-03-20 08:03:46
  * @LastEditors  : wyatt
- * @LastEditTime : 2021-03-20 09:45:33
+ * @LastEditTime : 2021-03-22 13:39:43
  * @Description  : 路由的实现
- * @FilePath     : /project-vue/src/w-router/w-vue-router.js
+ * @FilePath     : /vue-project/src/w-router/w-vue-router.js
  */
 // 实现一个插件
 // 返回一个函数
@@ -15,24 +15,53 @@ class VueRouter {
   constructor(options) {
     this.$options = options;
     _Vue;
-    // 缓存一下path和route映射关系,提前处理路由表避免每次都循环
-    this.routeMap = {};
-    this.$options.routes.forEach((route) => {
-      this.routeMap[route.path] = route;
-    });
 
     // 需要定义一个响应式的current属性
     // util.defineReactive可以给一个对象定一个响应式的属性,官方提供的隐藏的api
-    const initial = window.location.hash.slice(1) || "/";
-    _Vue.util.defineReactive(this, "current", initial);
+    // const initial = window.location.hash.slice(1) || "/";
+    // _Vue.util.defineReactive(this, "current", initial);
+
+    this.current = window.location.hash.slice(1) || "/";
+    _Vue.util.defineReactive(this, "matched", []);
+    // match方法可以递归遍历路由表，获得匹配关系数组
+    this.match();
 
     // 监控url的变化
     window.addEventListener("hashchange", this.onHashChange.bind(this));
+    window.addEventListener("load", this.onHashChange.bind(this));
+
+    // 缓存一下path和route映射关系,提前处理路由表避免每次都循环
+    // this.routeMap = {};
+    // this.$options.routes.forEach((route) => {
+    //   this.routeMap[route.path] = route;
+    // });
   }
 
   onHashChange() {
     // 只要#号之后的内容
     this.current = window.location.hash.slice(1);
+    this.matched = [];
+    this.match();
+  }
+
+  match(routes) {
+    routes = routes || this.$options.routes;
+
+    // 递归遍历
+    for (const route of routes) {
+      if (route.path === "/" && this.current === "/") {
+        this.matched.push(route);
+        return;
+      }
+
+      if (route.path !== "/" && this.current.indexOf(route.path) != -1) {
+        this.matched.push(route);
+        if (route.children) {
+          this.match(route.children);
+        }
+        return;
+      }
+    }
   }
 }
 VueRouter.install = function(Vue) {
@@ -98,8 +127,11 @@ VueRouter.install = function(Vue) {
       // if (route) {
       //   component = route.component;
       // }
+
+      // 获取path对应的component
       const { routeMap, current } = this.$router;
       const component = routeMap[current] ? routeMap[current].component : null;
+
       // 渲染传入的组件
       return h(component);
     },

@@ -2,13 +2,19 @@
  * @Author       : wyatt
  * @Date         : 2021-03-18 14:50:26
  * @LastEditors  : wyatt
- * @LastEditTime : 2021-03-20 07:45:55
+ * @LastEditTime : 2021-03-21 21:55:27
  * @Description  :  测试页面
- * @FilePath     : /project-vue/src/views/home.vue
+ * @FilePath     : /vue-project/src/views/home.vue
 -->
 <template>
   <div>
     <recursion />
+
+    <p @click="$store.commit('add')">counter:{{ $store.state.counter }}</p>
+    <p @click="$store.dispatch('add')">
+      async counter: {{ $store.state.counter }}
+    </p>
+    <p>double counter:{{ $store.getters.doubleCounter }}</p>
     <child-one msg="This is msg!!!" name="wyatt" @some-event="onSomeEvent">
       123456789
     </child-one>

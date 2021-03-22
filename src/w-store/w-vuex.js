@@ -2,7 +2,7 @@
  * @Author       : wyatt
  * @Date         : 2021-03-20 11:38:07
  * @LastEditors  : wyatt
- * @LastEditTime : 2021-03-20 13:20:17
+ * @LastEditTime : 2021-03-21 22:03:23
  * @Description  :
  * @FilePath     : /vue-project/src/w-store/w-vuex.js
  */
@@ -14,15 +14,35 @@ class Store {
     this._mutations = options.mutations;
     this._actions = options.actions;
     // this._getters = options.getters;
+    /**this._wrappedGetters = options.getters;
+
+    // 定义computed选项
+    const computed = {};
+    this.getters = {};
+    // {doubleCounter(state){}}
+    const store = this;
+    Object.keys(this._wrappedGetters).forEach((key) => {
+      // 获取用户定义的getter
+      const fn = store._wrappedGetters[key];
+      // 转换为computed可以使用无参数形式
+      computed[key] = function() {
+        return fn(store.state);
+      };
+      // 为getters定义只读属性
+      Object.defineProperty(store.getters, key, {
+        get: () => store._vm[key],
+      });
+    });
+ */
+
     // 创建响应式的state
     // this.$store.state.xx
     this._vm = new _Vue({
-      data() {
-        return {
-          // 不希望被代理，就加上$
-          $$state: options.state,
-        };
+      data: {
+        // 不希望被Vue代理，就加上两个$
+        $$state: options.state,
       },
+      computed: {},
     });
     // 修改一下this的指向
     this.commit = this.commit.bind(this);

@@ -2,18 +2,18 @@
  * @Author       : wyatt
  * @Date         : 2021-03-18 14:28:21
  * @LastEditors  : wyatt
- * @LastEditTime : 2021-03-20 11:34:37
+ * @LastEditTime : 2021-03-22 13:40:37
  * @Description  :
  * @FilePath     : /vue-project/src/main.js
  */
 import Vue from "vue";
 import App from "./App.vue";
 
-// import router from "./router";
-import router from "./w-router";
+import router from "./router";
+// import router from "./w-router";
 
-// import store from './store'
-import store from "./w-store";
+import store from "./store";
+// import store from "./w-store";
 
 Vue.config.productionTip = false;
 
